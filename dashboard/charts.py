@@ -85,22 +85,24 @@ def _style(fig: go.Figure, title: str, subtitle: str | None = None,
 
 
 def with_movement(df: pd.DataFrame) -> pd.DataFrame:
-    """Добавляет movement_type, если его нет в данных."""
+    """Добавляет movement_type, если его нет в данных (обычно его кладёт build_teachers.py).
+
+    Исход года Y определяется по году Y+1: остался / перешёл в другую школу / ушёл из системы;
+    для последнего года — неизвестен (NaN).
+    """
     if 'movement_type' in df.columns:
         return df
-    
-    d = df.sort_values(['id', 'year']).copy()
-    nxt = d.groupby('id')[['year', 'school_num']].shift(-1)
-    
-    # Используем boolean маски
-    moved_mask = nxt['school_num'].notna() & (nxt['school_num'] != d['school_num'])
-    left_mask = nxt['school_num'].isna() & (d['year'] < d['year'].max())
-    
-    # Создаем колонку с object типом, чтобы туда влезали и строки, и None
-    d['movement_type'] = pd.Series([None] * len(d), dtype='object')
-    d.loc[moved_mask, 'movement_type'] = MOVE_ORDER[0]
-    d.loc[left_mask, 'movement_type'] = MOVE_ORDER[1]
-    
+
+    nxt = df[['id', 'year', 'school_num']].assign(year=df['year'] - 1)
+    next_school = (df[['id', 'year']]
+                   .merge(nxt.rename(columns={'school_num': 'next_school'}),
+                          on=['id', 'year'], how='left')['next_school']
+                   .set_axis(df.index))
+    d = df.copy()
+    d['movement_type'] = np.select(
+        [d['year'] == d['year'].max(), next_school.isna(), next_school != d['school_num']],
+        [None, MOVE_ORDER[1], MOVE_ORDER[0]], default='остался')
+    d.loc[d['year'] == d['year'].max(), 'movement_type'] = np.nan
     return d
 
 def add_risk(df: pd.DataFrame) -> pd.DataFrame:
