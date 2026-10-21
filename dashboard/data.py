@@ -1,10 +1,14 @@
+# data.py
 import pandas as pd
+import os
 
-teachers = pd.read_parquet("../data/teachers_clean.parquet")
+def load_data():
+    path = os.path.join(os.path.dirname(__file__), 'data', 'teachers.parquet')
+    df = pd.read_parquet(path)
+    return df
 
-
-
-# Списки для фильтров, добавлять новые по мере необходимости
-YEARS = sorted(teachers["year"].unique())
-SCHOOLS = sorted(teachers["school_num"].unique())
-
+# Глобальные справочники для фильтров
+DF = load_data()
+SCHOOLS = sorted(DF['school_num'].unique())
+DISTRICTS = sorted(DF['district'].dropna().unique())
+POSITIONS = sorted(DF['main_position_cat'].unique())
