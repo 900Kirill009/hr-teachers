@@ -1,4 +1,4 @@
-"""Вкладка «What-if». Появится после модели (этапы 3–4)."""
+"""Вкладка "What-if". Появится после модели (этапы 3–4)."""
 import components as cm
 from tabs import Selection
 

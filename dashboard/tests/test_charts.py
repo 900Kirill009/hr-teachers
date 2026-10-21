@@ -28,7 +28,7 @@ def _is_stub(fig: go.Figure) -> bool:
 
 @pytest.fixture(scope='module')
 def df_forecast():
-    """Данные с синтетическим прогнозом — пока модели нет (этап 3)."""
+    """Данные с синтетическим прогнозом - пока модели нет (этап 3)."""
     rng = np.random.default_rng(0)
     d = DF.copy()
     p = rng.dirichlet([8, 1, 1], size=len(d))

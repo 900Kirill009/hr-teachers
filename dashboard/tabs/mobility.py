@@ -1,4 +1,4 @@
-"""Вкладка «Мобильность»: фактические переходы и уходы."""
+"""Вкладка "Мобильность": фактические переходы и уходы."""
 from dash import html
 
 import charts as ch
@@ -35,7 +35,7 @@ def render(sel: Selection):
         cm.kpi('Остались', cm.fmt(unit['stayed'], 1, '%'),
                f'Москва — {cm.fmt(city["stayed"], 1, "%")}' if moscow else f'{s.unit_name}, {my}'),
         cm.kpi('Школ с оттоком выше Москвы', f'{above} из {total}',
-               f'в {my - 1} — {prev[0]}' if prev and prev[1] else (district or 'по всей Москве')),
+               f'в {my - 1} — {prev[0]} из {prev[1]}' if prev and prev[1] else (district or 'по всей Москве')),
     ]))
     return head + [
         html.Div([

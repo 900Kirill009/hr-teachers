@@ -48,7 +48,7 @@ def _school_label(s) -> str:
 
 
 def subject_label(s: str) -> str:
-    """«начальных классов» → «Начальных классов» (в данных направление в родительном падеже)."""
+    """"начальных классов" → "Начальных классов" (в данных направление в родительном падеже)."""
     return s[:1].upper() + s[1:] if s else s
 
 
@@ -56,7 +56,7 @@ def _unit(df: pd.DataFrame, year: int, school_num: int | None = None,
           district: str | None = None):
     """Срез выбранной единицы (школа или округ), весь город за год и подпись единицы.
 
-    Без школы и округа единица пустая, подпись None — графики показывают только Москву.
+    Без школы и округа единица пустая, подпись None - графики показывают только Москву.
     """
     city = df[df['year'] == year]
     if school_num is not None:
@@ -101,7 +101,7 @@ def _style(fig: go.Figure, title: str, subtitle: str | None = None,
         margin=dict(l=6, r=28, t=top, b=6),
         bargap=0.35, bargroupgap=0.12,
         showlegend=legend,
-        # легенда — в верхнем поле под заголовком, не поверх столбцов
+        # легенда - в верхнем поле под заголовком, не поверх столбцов
         legend=dict(orientation='h', x=0, xref='container', y=1, yanchor='bottom',
                     bgcolor='rgba(0,0,0,0)', font=dict(size=11)),
         # дашборд рисует заголовок в HTML-шапке карточки (components.graph)
@@ -126,7 +126,7 @@ def with_movement(df: pd.DataFrame) -> pd.DataFrame:
     """Добавляет movement_type, если его нет в данных (обычно его кладёт build_teachers.py).
 
     Исход года Y определяется по году Y+1: остался / перешёл в другую школу / ушёл из системы;
-    для последнего года — неизвестен (NaN).
+    для последнего года - неизвестен (NaN).
     """
     if 'movement_type' in df.columns:
         return df
@@ -180,7 +180,7 @@ def _outflow_stack(df: pd.DataFrame, year: int, mask, top_n: int | None,
 
     city = with_movement(df)
     city_share = _outflow_share(city[city['year'] == year])
-    if total_row:  # итоговая строка (например, «Москва») внизу списка
+    if total_row:  # итоговая строка (например, "Москва") внизу списка
         city_part = city[city['year'] == year]
         n = city_part['id'].nunique()
         row = [city_part.loc[city_part['movement_type'] == m, 'id'].nunique() / n * 100
@@ -229,7 +229,7 @@ def fig_mobility_by_district(df, year: int) -> go.Figure:
 
 
 # ---------------------------------------------------------------------------
-# 2. Возрастная структура — обзор (vertical bar)
+# 2. Возрастная структура - обзор (vertical bar)
 # ---------------------------------------------------------------------------
 def fig_age_moscow(df, year: int, district: str | None = None,
                    school_num: int | None = None) -> go.Figure:
@@ -305,7 +305,7 @@ def fig_gaps_vs_moscow(df, year: int, school_num: int | None = None,
     labels = [r[0] for r in rows]
     devs = [r[1] for r in rows]
     texts = [f'{v:+.1f}'.replace('-', '−').replace('.', ',') + ' п.п.' for v in devs]
-    # длина полосы — модуль отклонения, знак — в подписи (как в макете)
+    # длина полосы - модуль отклонения, знак - в подписи (как в макете)
     fig = go.Figure(go.Bar(y=labels, x=[round(abs(v), 1) for v in devs], orientation='h',
                            marker=dict(color=ORANGE, cornerradius=3),
                            text=texts, textposition='outside', cliponaxis=False,
@@ -318,7 +318,7 @@ def fig_gaps_vs_moscow(df, year: int, school_num: int | None = None,
 
 
 # ---------------------------------------------------------------------------
-# 5. Возрастная структура — школа (округ) vs Москва (grouped vertical bar)
+# 5. Возрастная структура - школа (округ) vs Москва (grouped vertical bar)
 # ---------------------------------------------------------------------------
 def fig_age_school_vs_moscow(df, year: int, school_num: int | None = None,
                              district: str | None = None) -> go.Figure:
@@ -337,7 +337,7 @@ def fig_age_school_vs_moscow(df, year: int, school_num: int | None = None,
 
 
 # ---------------------------------------------------------------------------
-# 5б. Стаж — школа (округ) vs Москва (grouped vertical bar)
+# 5б. Стаж - школа (округ) vs Москва (grouped vertical bar)
 # ---------------------------------------------------------------------------
 EXP_BINS   = [-1, 3, 10, 20, 30, np.inf]
 EXP_ORDER  = ['до 3 лет', '4–10', '11–20', '21–30', '31+']
@@ -436,7 +436,7 @@ def fig_education_profdev(df, year: int, school_num: int | None = None,
 
 
 # ---------------------------------------------------------------------------
-# 8. Динамика по годам (vertical stacked; с единицей — рядом столбцы Москвы)
+# 8. Динамика по годам (vertical stacked; с единицей - рядом столбцы Москвы)
 # ---------------------------------------------------------------------------
 def _dynamics_shares(d: pd.DataFrame) -> pd.DataFrame:
     known = d[d['movement_type'].notna()]

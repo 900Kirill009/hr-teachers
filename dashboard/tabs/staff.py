@@ -1,4 +1,4 @@
-"""Вкладка «Кадровый состав»: школа (или округ) против округа и Москвы."""
+"""Вкладка "Кадровый состав": школа (или округ) против округа и Москвы."""
 from dash import html
 
 import charts as ch
@@ -28,7 +28,7 @@ def _compare_kpis(sel: Selection):
     if sel.school is not None or sel.district:
         refs.append(('Москва', city))
 
-    if sel.school is not None:   # численность школы — против средней школы округа/города
+    if sel.school is not None:   # численность школы - против средней школы округа/города
         count = cm.kpi('Педагогов в школе', cm.fmt(unit['teachers'], 0),
                        compare=[(n, cm.fmt(r['per_school'], 0) + ' ср.') for n, r in refs])
     else:

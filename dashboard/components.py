@@ -35,7 +35,7 @@ def _legend(fig):
 
 
 def graph(fig, height=360, gid=None):
-    """Карточка с графиком: заголовок, подзаголовок и легенда — в HTML, не в Plotly."""
+    """Карточка с графиком: заголовок, подзаголовок и легенда - в HTML, не в Plotly."""
     props = {'id': gid} if gid else {}
     meta = fig.layout.meta or {}
     header = []
@@ -54,7 +54,7 @@ def graph(fig, height=360, gid=None):
 
 
 def kpi(title, value, sub=None, accent=None, compare=None):
-    """KPI-карточка. compare — список пар (подпись, значение) справа."""
+    """KPI-карточка. compare - список пар (подпись, значение) справа."""
     body = [html.Div(title, className='kpi-title'),
             html.Div(value, className='kpi-value' + (f' kpi-{accent}' if accent else ''))]
     if sub:

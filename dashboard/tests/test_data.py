@@ -1,4 +1,4 @@
-"""Проверки контракта data/teachers.parquet (см. README, «Контракт данных»)."""
+"""Проверки контракта data/teachers.parquet (см. README, "Контракт данных")."""
 import pandas as pd
 import pytest
 
@@ -63,7 +63,7 @@ def test_teacher_absent_one_year_counts_as_left():
                        'school_num': [1, 1, 1, 2, 2]})
     got = ch.with_movement(df)['movement_type'].tolist()
     assert got[0] == ch.MOVE_ORDER[1]       # a: 2022 → нет в 2023 → ушёл
-    assert pd.isna(got[1])                  # a: 2024 — последний год
+    assert pd.isna(got[1])                  # a: 2024 - последний год
     assert got[2] == ch.MOVE_ORDER[0]       # b: 2022 → 2023 в другой школе
     assert got[3] == 'остался'              # b: 2023 → 2024 в той же школе
 

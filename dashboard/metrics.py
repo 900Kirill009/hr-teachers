@@ -54,7 +54,7 @@ def mobility_kpis(part: pd.DataFrame) -> dict:
 
 
 def risk_kpis(part: pd.DataFrame) -> dict:
-    """Прогнозные показатели — только если в данных есть вероятности модели."""
+    """Прогнозные показатели - только если в данных есть вероятности модели."""
     if part.empty or not {'prob_leave', 'prob_move'} <= set(part.columns):
         return {}
     d = add_risk(part)
@@ -78,7 +78,7 @@ def schools_above_city(df: pd.DataFrame, year: int, district: str | None) -> tup
 
 
 def district_tiles(df: pd.DataFrame, year: int) -> tuple[pd.DataFrame, float, str]:
-    """Показатель по округам для плиток: прогнозный риск, а без модели — фактический отток.
+    """Показатель по округам для плиток: прогнозный риск, а без модели - фактический отток.
 
     Возвращает (таблица district/value/delta, значение по Москве, название показателя).
     """
@@ -100,7 +100,7 @@ def district_tiles(df: pd.DataFrame, year: int) -> tuple[pd.DataFrame, float, st
 
 
 def tile_level(delta: float) -> int:
-    """0 — ниже на 1,5+ п.п., 1 — немного ниже, 2 — выше среднего, 3 — выше на 2,5+ п.п."""
+    """0 - ниже на 1,5+ п.п., 1 - немного ниже, 2 - выше среднего, 3 - выше на 2,5+ п.п."""
     if delta <= -1.5:
         return 0
     if delta < 0:
@@ -131,7 +131,7 @@ SUBJECT_TABLE_COLS = ['Предмет', 'Педагогов', 'Ср. возра�
 
 
 def subject_table(part: pd.DataFrame, mob_part: pd.DataFrame) -> pd.DataFrame:
-    """Таблица «Педагоги по предметам»: состав за выбранный год + факт мобильности.
+    """Таблица "Педагоги по предметам": состав за выбранный год + факт мобильности.
 
     Группы меньше MIN_GROUP человек не показываются.
     """

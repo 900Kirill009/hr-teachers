@@ -1,11 +1,11 @@
-"""Сборка data/teachers.parquet — таблицы для дашборда (1 строка = 1 педагог в 1 году).
+"""Сборка data/teachers.parquet - таблицы для дашборда (1 строка = 1 педагог в 1 году).
 
-Вход:  data/data_clean.parquet (очищенные «Педагоги», делает ноутбук дз_5),
+Вход:  data/data_clean.parquet (очищенные "Педагоги", делает ноутбук дз_5),
        data/Школы.xlsx, data/Образование.xlsx, data/ПК-ПП.xlsx
 Выход: data/teachers.parquet
 
 Запуск из корня репозитория:  python prototype/build_teachers.py
-Описание колонок — в README, раздел «Контракт данных».
+Описание колонок - в README, раздел "Контракт данных".
 """
 import os
 import re
@@ -28,7 +28,7 @@ HIGHER_EDU = ('Высшее', 'Аспирантура')
 PEDAGOGICAL = re.compile(r'педагог|учител|преподав', re.IGNORECASE)
 SHORT_COURSE = re.compile(r'ппэ|организатор|подготовка|эксперт', re.IGNORECASE)
 
-# Слова в «Направлении деятельности», которые не говорят о предмете
+# Слова в "Направлении деятельности", которые не говорят о предмете
 SUBJECT_STOPWORDS = {'языка', 'классов', 'культуры', 'основ', 'группы', 'дня', 'по', 'и', 'в'}
 # Специализации, которые засчитываем как совпадение для целых групп предметов
 SUBJECT_SYNONYMS = {
@@ -47,7 +47,7 @@ FOREIGN = ('английск', 'немецк', 'французск', 'испан
 
 
 # ---------------------------------------------------------------------------
-# База: те же шаги, что в ноутбуке «Движуха в кадрах»
+# База: те же шаги, что в ноутбуке "Движуха в кадрах"
 # ---------------------------------------------------------------------------
 def build_base(df_clean: pd.DataFrame, schools: pd.DataFrame) -> pd.DataFrame:
     teachers = df_clean.drop_duplicates(['id', 'year']).copy()
@@ -65,7 +65,7 @@ def build_base(df_clean: pd.DataFrame, schools: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# Мобильность: 0 — остался, 1 — перешёл в другую школу, 2 — ушёл из системы
+# Мобильность: 0 - остался, 1 - перешёл в другую школу, 2 - ушёл из системы
 # ---------------------------------------------------------------------------
 def add_mobility(t: pd.DataFrame) -> pd.DataFrame:
     nxt = t[['id', 'year', 'school_num']].copy()
@@ -81,7 +81,7 @@ def add_mobility(t: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# Нагрузка: предметы и параллели (из построчных записей «Педагогов»)
+# Нагрузка: предметы и параллели (из построчных записей "Педагогов")
 # ---------------------------------------------------------------------------
 def add_load(t: pd.DataFrame, df_clean: pd.DataFrame, schools: pd.DataFrame) -> pd.DataFrame:
     load = (df_clean.groupby(['id', 'year'])
@@ -98,8 +98,8 @@ def add_load(t: pd.DataFrame, df_clean: pd.DataFrame, schools: pd.DataFrame) -> 
         columns={'Школа': 'school_num', 'Общая численность контингента': 'school_students'})
     staff = staff.merge(contingent, on='school_num', how='left')
     ratio = staff['school_students'] / staff['school_teachers']
-    # У части школ в данных лишь несколько педагогов (медиана 5) — штат выгружен не целиком.
-    # В распределении разрыв: полные школы ≤ 60 учеников на педагога, неполные — от 100.
+    # У части школ в данных лишь несколько педагогов (медиана 5) - штат выгружен не целиком.
+    # В распределении разрыв: полные школы ≤ 60 учеников на педагога, неполные - от 100.
     staff['school_staff_complete'] = (ratio <= MAX_STUDENTS_PER_TEACHER).astype(int)
     staff['students_per_teacher'] = ratio.where(staff['school_staff_complete'] == 1)
     return t.merge(staff, on=['school_num', 'year'], how='left')
@@ -133,8 +133,8 @@ def add_education(t: pd.DataFrame, edu: pd.DataFrame) -> pd.DataFrame:
     }).reset_index()
     t = t.merge(per, on=['id', 'year'], how='left')
 
-    # Совпадение специализации с предметом — эвристика по основам слов.
-    # Считаем только для учителей: у руководителей «направление» — не предмет.
+    # Совпадение специализации с предметом - эвристика по основам слов.
+    # Считаем только для учителей: у руководителей "направление" - не предмет.
     def match(row):
         if (row['main_position_cat'] != 'учитель' or row['speciality'] == 'не указано'
                 or pd.isna(row['edu_text'])):
@@ -155,14 +155,14 @@ def add_education(t: pd.DataFrame, edu: pd.DataFrame) -> pd.DataFrame:
 def add_profdev(t: pd.DataFrame, edu: pd.DataFrame, pk: pd.DataFrame) -> pd.DataFrame:
     dpo = edu[edu['Тип образования'].str.startswith('Дополнительное')]
     # ДПО со специализацией/квалификацией = переподготовка (ПК их не даёт),
-    # кроме курсов вроде «Организатор ППЭ», записанных в квалификацию
+    # кроме курсов вроде "Организатор ППЭ", записанных в квалификацию
     short_course = dpo['Квалификация'].str.contains(SHORT_COURSE, na=False)
     is_pp = dpo['Специализация'].notna() | (dpo['Квалификация'].notna() & ~short_course)
     pp_edu = dpo[is_pp][['id', 'year']]
     pp_pk = pk[pk['type'] == 'ПП'][['id', 'year']]
     pp = pd.concat([pp_edu, pp_pk]).drop_duplicates()
 
-    # Даты обучения: из ДПО в «Образовании» (история) и из листов ПК-ПП (текущий год)
+    # Даты обучения: из ДПО в "Образовании" (история) и из листов ПК-ПП (текущий год)
     events = pd.concat([
         dpo[['id', 'Дата окончания']].rename(columns={'Дата окончания': 'done'}),
         pk[['id', 'year']].rename(columns={'year': 'done'}),

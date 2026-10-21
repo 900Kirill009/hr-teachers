@@ -21,7 +21,7 @@ CATEGORIES = {'высшая': 'Высшая', 'первая': 'Первая', '�
 ALL = 'all'
 YES_NO = [{'label': 'Все', 'value': ALL}, {'label': 'Да', 'value': 1}, {'label': 'Нет', 'value': 0}]
 
-# id фильтра → значение по умолчанию (по нему же считаются «активные» фильтры и сброс)
+# id фильтра → значение по умолчанию (по нему же считаются "активные" фильтры и сброс)
 EXTRA_DEFAULTS = {
     'f-position': [],
     'f-subject': [],
@@ -39,9 +39,9 @@ EXTRA_DEFAULTS = {
 }
 EXTRA_IDS = list(EXTRA_DEFAULTS)
 
-# фильтр «да/нет» → колонка данных
+# фильтр "да/нет" → колонка данных
 BINARY_COLUMNS = {
-    'f-degree': None,           # учёная степень — отдельная логика
+    'f-degree': None,           # учёная степень - отдельная логика
     'f-edu-ped': 'edu_pedagogical',
     'f-edu-match': 'edu_speciality_match',
     'f-pk': 'pk_recent',
@@ -53,8 +53,8 @@ BINARY_COLUMNS = {
 def apply_filters(df: pd.DataFrame, values: dict, school: int | None = None) -> pd.DataFrame:
     """Применяет доп. фильтры ко всем годам и всему городу.
 
-    Сравнение «школа vs Москва» остаётся честным: фильтр «Математика» сужает и школу, и город.
-    Выбранную школу не отсекает фильтр «только полный штат».
+    Сравнение "школа vs Москва" остаётся честным: фильтр "Математика" сужает и школу, и город.
+    Выбранную школу не отсекает фильтр "только полный штат".
     """
     v = {**EXTRA_DEFAULTS, **{k: x for k, x in values.items() if x is not None}}
     m = pd.Series(True, index=df.index)

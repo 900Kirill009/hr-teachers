@@ -15,7 +15,7 @@ TABS = {
 }
 EXTRA_INPUTS = [Input(fid, 'value') for fid in flt.EXTRA_IDS]
 
-# школа по умолчанию для роли «Директор» — самая крупная за последний год
+# школа по умолчанию для роли "Директор" - самая крупная за последний год
 DEFAULT_SCHOOL = int(DF[DF['year'] == YEARS[-1]]['school_num'].value_counts().index[0])
 SCHOOL_DISTRICT = DF.drop_duplicates('school_num').set_index('school_num')['district'].to_dict()
 
@@ -75,7 +75,7 @@ def sync_unit(role, district, school, _tiles, _reset):
     elif role == 'district' and not district:
         district = SCHOOL_DISTRICT.get(school) if school is not None else DISTRICTS[0]
 
-    # директору список школ — по всему городу (свою школу выбирает сам, демо без авторизации)
+    # директору список школ - по всему городу (свою школу выбирает сам, демо без авторизации)
     options = flt.school_options(None if role == 'director' else district)
     return (district, role == 'director', role == 'city',
             school, options, role != 'director')
